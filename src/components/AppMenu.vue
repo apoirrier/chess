@@ -12,7 +12,7 @@
     >
       <nav class="menu">
         <RouterLink to="/" class="menu-item"
-                    @click="$emit('close')">Home</RouterLink>
+                    @click="$emit('close')">Entraînement</RouterLink>
       </nav>
 
       <div class="bottom">
