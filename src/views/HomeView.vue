@@ -33,7 +33,7 @@ const feedback = ref<Feedback>(idleFeedback)
 
 function onBoardCreated(api : BoardApi) {
   boardApi.value = api
-  startGame(boardApi.value, playerColor.value)
+  startGame(boardApi.value as BoardApi, playerColor.value as PlayerColor)
 }
 
 onMounted(async () => {
@@ -41,23 +41,23 @@ onMounted(async () => {
 })
 
 function onMove(move : MoveEvent) {
-  if(move.color !== playerColor.value[0]) {
+  if(move.color !== (playerColor.value as PlayerColor)[0]) {
     feedback.value = idleFeedback
     return
   }
   feedback.value = evaluatePlayerMove(move.before, move.san)
   if(feedback.value.type === 'success' && feedback.value.message === undefined) {
     setTimeout(() => {
-      playComputer(boardApi.value)
+      playComputer(boardApi.value as BoardApi)
     }, 500)
   }
 }
 
 function onFeedbackClicked() {
   if(feedback.value.type === 'success') {
-    playComputer(boardApi.value)
+    playComputer(boardApi.value as BoardApi)
   } else {
-    boardApi.value.undoLastMove()
+    boardApi.value?.undoLastMove()
     feedback.value = idleFeedback
   }
 }
@@ -69,5 +69,13 @@ function onFeedbackClicked() {
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .home {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>

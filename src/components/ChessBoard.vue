@@ -30,7 +30,7 @@ const boardConfig = computed<BoardConfig>(() => ({
   coordinates: true
 }))
 
-function onMove(move: moveEvent) {
+function onMove(move: MoveEvent) {
   emit("move", move)
 }
 
@@ -42,9 +42,15 @@ function onBoardCreated(api: BoardApi) {
 <style scoped>
 .board-container {
   width: 100%;
-  max-width: 640px;
+  max-width: 700px;
   margin: 0 auto;
 
   aspect-ratio: 1;
+}
+
+@media (min-width: 1024px) {
+  .board-container {
+    margin: auto 0;
+  }
 }
 </style>

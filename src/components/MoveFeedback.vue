@@ -112,6 +112,9 @@ function onStatusClicked() {
 }
 
 .bubble {
+  max-width: 360px;
+
+
   grid-area: bubble;
   align-self: start;
 
@@ -195,7 +198,6 @@ function onStatusClicked() {
   justify-self: end;
   align-self: end;
 
-  #height: 56px;
   width: 100%;
   max-width: 120px;
 
