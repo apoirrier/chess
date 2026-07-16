@@ -1,6 +1,6 @@
 export interface Feedback {
   type: 'idle' | 'success' | 'nobest' | 'error'
-  message: string
+  message?: string
   action?: {
     label: string
     callback: () => void
