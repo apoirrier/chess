@@ -62,6 +62,8 @@ const title = computed(() => {
     case 'nobest':
     case 'error':
       return 'Réessayer'
+    default:
+      return ''
   }
 })
 
@@ -70,10 +72,10 @@ const statusStyle = computed(() => {
     case 'success':
     case 'nobest':
       return 'background-color: green;'
-    case 'idle':
-      return ''
     case 'error':
       return 'background-color: darkred;'
+    default:
+      return ''
   }
 })
 
@@ -95,7 +97,7 @@ const isButton = computed(() => {
 })
 
 function onStatusClicked() {
-  if(isButton) {
+  if(isButton.value) {
     emit("click")
   }
 }

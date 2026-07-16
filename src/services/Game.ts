@@ -1,7 +1,7 @@
 import type { PlayerColor } from '@/models/Game'
 import type { Feedback } from '@/models/Feedback'
 import { goodFeedback, badFeedback, sicilianFeedback, frenchFeedback } from '@/models/Feedback'
-import type { BoardApi, MoveEvent } from 'vue3-chessboard'
+import type { BoardApi } from 'vue3-chessboard'
 
 export async function createGame(): Promise<PlayerColor> {
   await new Promise(resolve => setTimeout(resolve, 500))
