@@ -74,11 +74,11 @@ const statusStyle = computed(() => {
   switch (props.feedback.type) {
     case 'success':
     case 'nobest':
-      return 'background-color: green;'
+      return 'background-color: var(--good-feedback-color);'
     case 'error':
-      return 'background-color: darkred;'
+      return 'background-color: var(--bad-feedback-color);'
     case 'end':
-      return 'background-color: blue;'
+      return 'background-color: var(--end-feedback-color);'
     default:
       return ''
   }
@@ -159,7 +159,9 @@ function onStatusClicked() {
 
 .status {
   grid-area: status;
-  width: 100%;
+  width: 200px;
+
+  text-align: center;
 
   display: grid;
   grid-template-columns: 56px 1fr;

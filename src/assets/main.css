@@ -17,6 +17,12 @@
 
   /* Header */
   --header-height: 64px;
+
+  /* Feedback */
+  --good-feedback-color: #629924;
+  --bad-feedback-color: #ff4040;
+  --end-feedback-color: #3692e7;
+
 }
 
 @media (prefers-color-scheme: dark) {
