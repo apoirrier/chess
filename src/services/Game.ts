@@ -53,5 +53,7 @@ export function evaluatePlayerMove(before: string, move: string): Feedback {
         default:
           return badFeedback
       }
+    default:
+      return badFeedback
   }
 }
