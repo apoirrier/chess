@@ -17,7 +17,7 @@ import { useRouter } from 'vue-router'
 import ChessBoard from '@/components/ChessBoard.vue'
 import MoveFeedback from '@/components/MoveFeedback.vue'
 import { createGame, playComputer, evaluatePlayerMove } from '@/services/Game'
-import type { Feedback } from '@/models/Feedback'
+import { type Feedback, idleFeedback, endFeedback } from '@/models/Feedback'
 import type { PlayerColor } from '@/models/Game'
 import type { BoardApi, MoveEvent } from 'vue3-chessboard'
 
@@ -27,26 +27,16 @@ const boardApi = ref<BoardApi | null>(null)
 
 const playerColor = ref<PlayerColor | null>(null)
 
-const idleFeedback: Feedback = {
-  type: 'idle',
-  message: 'Choisissez un coup candidat.',
-}
-
-const endFeedback: Feedback = {
-  type: 'end',
-  message: 'Fin de l\'entraînement.'
-}
-
 const feedback = ref<Feedback>(idleFeedback)
 
 async function playComputerMove(): Promise<void> {
   if(!boardApi.value) return
   const fen = boardApi.value.getFen()
   const move = await playComputer(fen)
-  if(move)
-    boardApi.value.move(move)
-  else
+  if(move === '')
     feedback.value = endFeedback
+  else
+    boardApi.value.move(move)
 }
 
 async function onBoardCreated(api : BoardApi) {
@@ -66,7 +56,7 @@ async function onMove(move : MoveEvent) {
     return
   }
   feedback.value = await evaluatePlayerMove(move.before, move.san)
-  if(feedback.value.type === 'success' && feedback.value.message === undefined) {
+  if(feedback.value.type === 'success' && feedback.value.message === '') {
     setTimeout(async () => {
       playComputerMove()
     }, 500)

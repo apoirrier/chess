@@ -1,6 +1,6 @@
 <template>
   <div class="feedback">
-    <div v-if="feedback.message != undefined" class="bubble">
+    <div v-if="feedback.message.length > 0 " class="bubble">
       <span>{{ feedback.message }}</span>
 
       <button
@@ -85,14 +85,14 @@ const statusStyle = computed(() => {
 })
 
 const secondary = computed(() => {
-  if(props.feedback.type === 'success' && props.feedback.message !== undefined) {
+  if(props.feedback.type === 'success' && props.feedback.message !== '') {
     return 'Suivant'
   }
   return undefined
 })
 
 const isButton = computed(() => {
-  if(props.feedback.type === 'success' && props.feedback.message !== undefined)
+  if(props.feedback.type === 'success' && props.feedback.message !== '')
     return true
   if(props.feedback.type === 'nobest')
     return true
