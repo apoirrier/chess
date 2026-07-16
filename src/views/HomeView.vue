@@ -13,12 +13,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import ChessBoard from '@/components/ChessBoard.vue'
 import MoveFeedback from '@/components/MoveFeedback.vue'
-import { createGame, startGame, playComputer, evaluatePlayerMove } from '@/services/Game'
+import { createGame, playComputer, evaluatePlayerMove } from '@/services/Game'
 import type { Feedback } from '@/models/Feedback'
 import type { PlayerColor } from '@/models/Game'
 import type { BoardApi, MoveEvent } from 'vue3-chessboard'
+
+const router = useRouter()
 
 const boardApi = ref<BoardApi | null>(null)
 
@@ -29,33 +32,52 @@ const idleFeedback: Feedback = {
   message: 'Choisissez un coup candidat.',
 }
 
-const feedback = ref<Feedback>(idleFeedback)
-
-function onBoardCreated(api : BoardApi) {
-  boardApi.value = api
-  startGame(boardApi.value as BoardApi, playerColor.value as PlayerColor)
+const endFeedback: Feedback = {
+  type: 'end',
+  message: 'Fin de l\'entraînement.'
 }
 
-onMounted(async () => {
-  playerColor.value = await createGame()
+const feedback = ref<Feedback>(idleFeedback)
+
+async function playComputerMove(): Promise<void> {
+  if(!boardApi.value) return
+  const fen = boardApi.value.getFen()
+  const move = await playComputer(fen)
+  if(move)
+    boardApi.value.move(move)
+  else
+    feedback.value = endFeedback
+}
+
+async function onBoardCreated(api : BoardApi) {
+  boardApi.value = api
+  if(playerColor.value === "black") {
+    playComputerMove()
+  }
+}
+
+onMounted(() => {
+  playerColor.value = createGame()
 })
 
-function onMove(move : MoveEvent) {
+async function onMove(move : MoveEvent) {
   if(move.color !== (playerColor.value as PlayerColor)[0]) {
     feedback.value = idleFeedback
     return
   }
-  feedback.value = evaluatePlayerMove(move.before, move.san)
+  feedback.value = await evaluatePlayerMove(move.before, move.san)
   if(feedback.value.type === 'success' && feedback.value.message === undefined) {
-    setTimeout(() => {
-      playComputer(boardApi.value as BoardApi)
+    setTimeout(async () => {
+      playComputerMove()
     }, 500)
   }
 }
 
-function onFeedbackClicked() {
+async function onFeedbackClicked() {
   if(feedback.value.type === 'success') {
-    playComputer(boardApi.value as BoardApi)
+    playComputerMove()
+  } else if(feedback.value.type === 'end') {
+    router.go(0)
   } else {
     boardApi.value?.undoLastMove()
     feedback.value = idleFeedback

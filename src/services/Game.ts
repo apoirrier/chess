@@ -3,39 +3,27 @@ import type { Feedback } from '@/models/Feedback'
 import { goodFeedback, badFeedback, sicilianFeedback, frenchFeedback } from '@/models/Feedback'
 import type { BoardApi } from 'vue3-chessboard'
 
-export async function createGame(): Promise<PlayerColor> {
-  await new Promise(resolve => setTimeout(resolve, 500))
-
+export function createGame(): PlayerColor {
   const playerColor: PlayerColor =
     Math.random() > 0.5 ? 'white' : 'black'
 
   return playerColor
 }
 
-export function startGame(boardApi: BoardApi, playerColor: PlayerColor): void {
-  if( playerColor === "black" ) {
-    playComputer(boardApi)
-  }
-}
-
-export function playComputer(boardApi: BoardApi): void {
-  const fen = boardApi.getFen()
+export async function playComputer(fen: string): Promise<string | undefined> {
   switch(fen) {
     case "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1":
-      boardApi.move('e4')
-      break;
+      return 'e4'
     case "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1":
-      boardApi.move('e5')
-      break;
+      return 'e5'
     case "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2":
-      boardApi.move('Nf3')
-      break;
+      return 'Nf3'
     default:
-      alert(fen)
+      return undefined
   }
 }
 
-export function evaluatePlayerMove(before: string, move: string): Feedback {
+export async function evaluatePlayerMove(before: string, move: string): Promise<Feedback> {
   switch(before) {
     case "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1":
       switch(move) {
@@ -50,6 +38,13 @@ export function evaluatePlayerMove(before: string, move: string): Feedback {
           return frenchFeedback
         case "c5":
           return sicilianFeedback
+        default:
+          return badFeedback
+      }
+    case "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2":
+      switch(move) {
+        case 'Nf3':
+          return goodFeedback
         default:
           return badFeedback
       }

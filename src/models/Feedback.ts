@@ -1,5 +1,5 @@
 export interface Feedback {
-  type: 'idle' | 'success' | 'nobest' | 'error'
+  type: 'idle' | 'success' | 'nobest' | 'error' | 'end'
   message?: string
   action?: {
     label: string

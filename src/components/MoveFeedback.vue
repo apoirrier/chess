@@ -47,6 +47,7 @@ const icon = computed(() => {
       return '♚'
     case 'nobest':
     case 'error':
+    case 'end':
       return '⟲'
     default:
       return '💡'
@@ -62,6 +63,8 @@ const title = computed(() => {
     case 'nobest':
     case 'error':
       return 'Réessayer'
+    case 'end':
+      return 'Jouez à nouveau'
     default:
       return ''
   }
@@ -74,6 +77,8 @@ const statusStyle = computed(() => {
       return 'background-color: green;'
     case 'error':
       return 'background-color: darkred;'
+    case 'end':
+      return 'background-color: blue;'
     default:
       return ''
   }
@@ -92,6 +97,8 @@ const isButton = computed(() => {
   if(props.feedback.type === 'nobest')
     return true
   if(props.feedback.type === 'error')
+    return true
+  if(props.feedback.type === 'end')
     return true
   return false
 })
