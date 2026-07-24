@@ -1,18 +1,11 @@
 <template>
   <Teleport to="body">
-    <div
-      v-if="open"
-      class="backdrop"
-      @click="$emit('close')"
-    />
+    <div v-if="open" class="backdrop" @click="$emit('close')" />
 
-    <aside 
-      class="drawer"
-      :class="{ open }"
-    >
+    <aside class="drawer" :class="{ open }">
       <nav class="menu">
-        <RouterLink to="/" class="menu-item"
-                    @click="$emit('close')">Entraînement</RouterLink>
+        <RouterLink to="/" class="menu-item" @click="$emit('close')">Entraînement</RouterLink>
+        <RouterLink to="/import" class="menu-item" @click="$emit('close')">Import PGN</RouterLink>
       </nav>
 
       <div class="bottom">
@@ -24,12 +17,12 @@
 
 <script setup lang="ts">
 defineProps<{
-  open: boolean
-}>()
+  open: boolean;
+}>();
 
 defineEmits<{
-  (e: 'close'): void
-}>()
+  (e: "close"): void;
+}>();
 </script>
 
 <style scoped>
@@ -46,7 +39,7 @@ defineEmits<{
 
   background: var(--color-surface);
 
-  transition: left .25s ease;
+  transition: left 0.25s ease;
 
   z-index: 1000;
 }
@@ -59,7 +52,7 @@ defineEmits<{
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  gap: .75rem;
+  gap: 0.75rem;
 }
 
 .menu-item {
@@ -75,7 +68,9 @@ defineEmits<{
 
   font-weight: 500;
 
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
 }
 
 /* hover (desktop) */

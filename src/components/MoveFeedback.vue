@@ -1,12 +1,9 @@
 <template>
   <div class="feedback">
-    <div v-if="feedback.message.length > 0 " class="bubble">
+    <div v-if="feedback.message.length > 0" class="bubble">
       <span>{{ feedback.message }}</span>
 
-      <button
-        v-if="feedback.action"
-        @click="feedback.action.callback"
-      >
+      <button v-if="feedback.action" @click="feedback.action.callback">
         {{ feedback.action.label }}
       </button>
     </div>
@@ -19,93 +16,85 @@
       </div>
     </div>
 
-    <img
-      class="coach"
-      src="@/assets/abra.png"
-      alt="Coach"
-    />
+    <img class="coach" src="@/assets/abra.png" alt="Coach" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { Feedback } from '@/models/Feedback'
+import { computed } from "vue";
+import type { Feedback } from "@/models/Feedback";
 
 const props = defineProps<{
-  feedback: Feedback
-}>()
+  feedback: Feedback;
+}>();
 
 const emit = defineEmits<{
-  (e: "click"): void
-}>()
+  (e: "click"): void;
+}>();
 
 const icon = computed(() => {
   switch (props.feedback.type) {
-    case 'success':
-      return '✓'
-    case 'idle':
-      return '♚'
-    case 'nobest':
-    case 'error':
-    case 'end':
-      return '⟲'
+    case "success":
+      return "✓";
+    case "idle":
+      return "♚";
+    case "nobest":
+    case "error":
+    case "end":
+      return "⟲";
     default:
-      return '💡'
+      return "💡";
   }
-})
+});
 
 const title = computed(() => {
   switch (props.feedback.type) {
-    case 'success':
-      return 'Bon coup!'
-    case 'idle':
-      return 'À votre tour'
-    case 'nobest':
-    case 'error':
-      return 'Réessayer'
-    case 'end':
-      return 'Jouez à nouveau'
+    case "success":
+      return "Bon coup!";
+    case "idle":
+      return "À votre tour";
+    case "nobest":
+    case "error":
+      return "Réessayer";
+    case "end":
+      return "Jouez à nouveau";
     default:
-      return ''
+      return "";
   }
-})
+});
 
 const statusStyle = computed(() => {
   switch (props.feedback.type) {
-    case 'success':
-    case 'nobest':
-      return 'background-color: var(--good-feedback-color);'
-    case 'error':
-      return 'background-color: var(--bad-feedback-color);'
-    case 'end':
-      return 'background-color: var(--end-feedback-color);'
+    case "success":
+    case "nobest":
+      return "background-color: var(--good-feedback-color);";
+    case "error":
+      return "background-color: var(--bad-feedback-color);";
+    case "end":
+      return "background-color: var(--end-feedback-color);";
     default:
-      return ''
+      return "";
   }
-})
+});
 
 const secondary = computed(() => {
-  if(props.feedback.type === 'success' && props.feedback.message !== '') {
-    return 'Suivant'
+  if (props.feedback.type === "success" && props.feedback.message !== "") {
+    return "Suivant";
   }
-  return undefined
-})
+  return undefined;
+});
 
 const isButton = computed(() => {
-  if(props.feedback.type === 'success' && props.feedback.message !== '')
-    return true
-  if(props.feedback.type === 'nobest')
-    return true
-  if(props.feedback.type === 'error')
-    return true
-  if(props.feedback.type === 'end')
-    return true
-  return false
-})
+  if (props.feedback.type === "success" && props.feedback.message !== "") return true;
+  if (props.feedback.type === "nobest") return true;
+  if (props.feedback.type === "error") return true;
+  if (props.feedback.type === "end") return true;
+  return false;
+});
 
 function onStatusClicked() {
-  if(isButton.value) {
-    emit("click")
+  if (isButton.value) {
+    emit("click");
   }
 }
 </script>
@@ -122,7 +111,6 @@ function onStatusClicked() {
 
 .bubble {
   max-width: 360px;
-
 
   grid-area: bubble;
   align-self: start;
@@ -177,6 +165,22 @@ function onStatusClicked() {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
+}
+
+.status:hover {
+  filter: brightness(1.1);
+}
+
+.status:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .status-icon {
