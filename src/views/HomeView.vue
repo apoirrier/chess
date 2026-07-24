@@ -7,70 +7,76 @@
       @move="onMove"
     />
 
-    <MoveFeedback :feedback=feedback @click="onFeedbackClicked" />
+    <MoveFeedback :feedback="feedback" @click="onFeedbackClicked" />
   </main>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import ChessBoard from '@/components/ChessBoard.vue'
-import MoveFeedback from '@/components/MoveFeedback.vue'
-import { createGame, playComputer, evaluatePlayerMove } from '@/services/Game'
-import { type Feedback, idleFeedback, endFeedback } from '@/models/Feedback'
-import type { PlayerColor } from '@/models/Game'
-import type { BoardApi, MoveEvent } from 'vue3-chessboard'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import ChessBoard from "@/components/ChessBoard.vue";
+import MoveFeedback from "@/components/MoveFeedback.vue";
+import { createGame, playComputer, evaluatePlayerMove } from "@/services/Game";
+import { type Feedback, idleFeedback, endFeedback } from "@/models/Feedback";
+import type { PlayerColor } from "@/models/Game";
+import type { BoardApi, MoveEvent } from "vue3-chessboard";
 
-const router = useRouter()
+const router = useRouter();
 
-const boardApi = ref<BoardApi | null>(null)
+const boardApi = ref<BoardApi | null>(null);
 
-const playerColor = ref<PlayerColor | null>(null)
+const playerColor = ref<PlayerColor | null>(null);
 
-const feedback = ref<Feedback>(idleFeedback)
+const feedback = ref<Feedback>(idleFeedback);
 
 async function playComputerMove(): Promise<void> {
-  if(!boardApi.value) return
-  const fen = boardApi.value.getFen()
-  const move = await playComputer(fen)
-  if(move === '')
-    feedback.value = endFeedback
-  else
-    boardApi.value.move(move)
+  if (!boardApi.value) return;
+  const fen = boardApi.value.getFen();
+  try {
+    const move = await playComputer(fen);
+    if (move === "") feedback.value = endFeedback;
+    else boardApi.value.move(move);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-async function onBoardCreated(api : BoardApi) {
-  boardApi.value = api
-  if(playerColor.value === "black") {
-    playComputerMove()
+async function onBoardCreated(api: BoardApi) {
+  boardApi.value = api;
+  if (playerColor.value === "black") {
+    playComputerMove();
   }
 }
 
 onMounted(() => {
-  playerColor.value = createGame()
-})
+  playerColor.value = createGame();
+});
 
-async function onMove(move : MoveEvent) {
-  if(move.color !== (playerColor.value as PlayerColor)[0]) {
-    feedback.value = idleFeedback
-    return
+async function onMove(move: MoveEvent) {
+  if (move.color !== (playerColor.value as PlayerColor)[0]) {
+    feedback.value = idleFeedback;
+    return;
   }
-  feedback.value = await evaluatePlayerMove(move.before, move.san)
-  if(feedback.value.type === 'success' && feedback.value.message === '') {
-    setTimeout(async () => {
-      playComputerMove()
-    }, 500)
+  try {
+    feedback.value = await evaluatePlayerMove(move.before, move.san);
+    if (feedback.value.type === "success" && feedback.value.message === "") {
+      setTimeout(async () => {
+        playComputerMove();
+      }, 500);
+    }
+  } catch (err) {
+    console.error(err);
   }
 }
 
 async function onFeedbackClicked() {
-  if(feedback.value.type === 'success') {
-    playComputerMove()
-  } else if(feedback.value.type === 'end') {
-    router.go(0)
+  if (feedback.value.type === "success") {
+    playComputerMove();
+  } else if (feedback.value.type === "end") {
+    router.go(0);
   } else {
-    boardApi.value?.undoLastMove()
-    feedback.value = idleFeedback
+    boardApi.value?.undoLastMove();
+    feedback.value = idleFeedback;
   }
 }
 </script>
