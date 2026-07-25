@@ -14,9 +14,9 @@ export function createGame(): PlayerColor {
   return playerColor;
 }
 
-export async function playComputer(fen: string): Promise<string> {
+export async function playComputer(fen: string): Promise<[string, string]> {
   const response = await request<PlayComputerResponse>(PLAY_COMPUTER_PATH, { fen: fen });
-  return response.move;
+  return [response.move, response.message];
 }
 
 export async function evaluatePlayerMove(before: string, move: string): Promise<Feedback> {

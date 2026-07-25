@@ -33,9 +33,16 @@ async function playComputerMove(): Promise<void> {
   if (!boardApi.value) return;
   const fen = boardApi.value.getFen();
   try {
-    const move = await playComputer(fen);
-    if (move === "") feedback.value = endFeedback;
-    else boardApi.value.move(move);
+    const [move, message] = await playComputer(fen);
+    if (move === "") {
+      feedback.value = endFeedback;
+    } else {
+      boardApi.value.move(move);
+      feedback.value = {
+        type: "idle",
+        message: message === "" ? "Choisissez un coup candidat." : message,
+      };
+    }
   } catch (err) {
     console.error(err);
   }
@@ -53,10 +60,7 @@ onMounted(() => {
 });
 
 async function onMove(move: MoveEvent) {
-  if (move.color !== (playerColor.value as PlayerColor)[0]) {
-    feedback.value = idleFeedback;
-    return;
-  }
+  if (move.color !== (playerColor.value as PlayerColor)[0]) return;
   try {
     feedback.value = await evaluatePlayerMove(move.before, move.san);
     if (feedback.value.type === "success" && feedback.value.message === "") {

@@ -2,6 +2,7 @@ import type { Feedback } from "./Feedback";
 
 export interface PlayComputerResponse {
   move: string;
+  message: string;
 }
 
 export interface EvaluateMoveResponse {
