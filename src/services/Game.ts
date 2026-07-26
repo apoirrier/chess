@@ -4,9 +4,16 @@ import type {
   PlayComputerResponse,
   EvaluateMoveResponse,
   ImportPGNResponse,
+  OpeningNameResponse,
 } from "@/models/responses";
 import { successFeedback, type ImportFeedback } from "@/models/ImportFeedback";
-import { request, PLAY_COMPUTER_PATH, EVALUATE_PATH, IMPORT_PGN_PATH } from "@/services/Api";
+import {
+  request,
+  PLAY_COMPUTER_PATH,
+  EVALUATE_PATH,
+  IMPORT_PGN_PATH,
+  OPENING_NAME_PATH,
+} from "@/services/Api";
 
 export function createGame(): PlayerColor {
   const playerColor: PlayerColor = Math.random() > 0.5 ? "white" : "black";
@@ -44,4 +51,9 @@ export async function importPGN(pgn: string): Promise<ImportFeedback> {
       message: "An unknown error occured.",
     };
   }
+}
+
+export async function getOpeningName(fen: string): Promise<string> {
+  const openingName = await request<OpeningNameResponse>(OPENING_NAME_PATH, { fen: fen });
+  return openingName.name;
 }

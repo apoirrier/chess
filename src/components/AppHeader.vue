@@ -13,7 +13,10 @@
       </span>
     </button>
 
-    <h1 class="title">Ouvertures</h1>
+    <div class="central-component">
+      <h1 class="title">Ouvertures</h1>
+      <h3>{{ openingName }}</h3>
+    </div>
 
     <!-- Placeholder to balance the grid -->
     <div></div>
@@ -22,11 +25,12 @@
 
 <script setup lang="ts">
 defineProps<{
-  open: boolean
-}>()
+  open: boolean;
+  openingName: string;
+}>();
 defineEmits<{
-  (e: 'toggle-menu'): void
-}>()
+  (e: "toggle-menu"): void;
+}>();
 </script>
 
 <style scoped>
@@ -93,7 +97,10 @@ defineEmits<{
   background: var(--color-text);
   border-radius: 2px;
 
-  transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.2s ease,
+    top 0.25s ease;
 }
 
 /* top bar */
@@ -123,6 +130,16 @@ defineEmits<{
 .icon.open span:nth-child(3) {
   top: 7px;
   transform: rotate(-45deg);
+}
+
+.central-component {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.central-component h3 {
+  margin: 0;
 }
 
 .title {

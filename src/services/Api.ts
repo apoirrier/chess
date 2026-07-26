@@ -3,6 +3,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 export const PLAY_COMPUTER_PATH = "/computer/play";
 export const EVALUATE_PATH = "/feedback/evaluate";
 export const IMPORT_PGN_PATH = "/pgn";
+export const OPENING_NAME_PATH = "/opening-name";
 
 export async function request<T>(path: string, body: unknown): Promise<T> {
   if (!API_BASE_URL) {

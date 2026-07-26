@@ -12,3 +12,7 @@ export interface EvaluateMoveResponse {
 export interface ImportPGNResponse {
   message: string;
 }
+
+export interface OpeningNameResponse {
+  name: string;
+}

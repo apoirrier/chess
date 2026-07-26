@@ -1,5 +1,5 @@
 <template>
-  <AppHeader :open="menuOpen" @toggle-menu="menuOpen = !menuOpen" />
+  <AppHeader :open="menuOpen" @toggle-menu="menuOpen = !menuOpen" :opening-name="openingName" />
 
   <AppMenu :open="menuOpen" @close="menuOpen = false" />
 
@@ -7,10 +7,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterView } from 'vue-router'
-import AppHeader from '@/components/AppHeader.vue'
-import AppMenu from '@/components/AppMenu.vue'
+import { provide, ref } from "vue";
+import { RouterView } from "vue-router";
+import AppHeader from "@/components/AppHeader.vue";
+import AppMenu from "@/components/AppMenu.vue";
 
-const menuOpen = ref(false)
+const menuOpen = ref<boolean>(false);
+const openingName = ref<string>("");
+provide("openingName", openingName);
 </script>

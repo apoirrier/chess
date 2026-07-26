@@ -12,11 +12,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { inject, type Ref, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import ChessBoard from "@/components/ChessBoard.vue";
 import MoveFeedback from "@/components/MoveFeedback.vue";
-import { createGame, playComputer, evaluatePlayerMove } from "@/services/Game";
+import { createGame, playComputer, evaluatePlayerMove, getOpeningName } from "@/services/Game";
 import { type Feedback, idleFeedback, endFeedback } from "@/models/Feedback";
 import type { PlayerColor } from "@/models/Game";
 import type { BoardApi, MoveEvent } from "vue3-chessboard";
@@ -28,6 +28,9 @@ const boardApi = ref<BoardApi | null>(null);
 const playerColor = ref<PlayerColor | null>(null);
 
 const feedback = ref<Feedback>(idleFeedback);
+
+const openingName = inject<Ref<string>>("openingName");
+const oldOpeningName = ref<string>("");
 
 async function playComputerMove(): Promise<void> {
   if (!boardApi.value) return;
@@ -60,6 +63,13 @@ onMounted(() => {
 });
 
 async function onMove(move: MoveEvent) {
+  if (boardApi.value === null) return;
+  const newOpeningName = await getOpeningName(boardApi.value.getFen());
+  if (openingName && newOpeningName !== "") {
+    oldOpeningName.value = openingName.value;
+    openingName.value = newOpeningName;
+  }
+
   if (move.color !== (playerColor.value as PlayerColor)[0]) return;
   try {
     feedback.value = await evaluatePlayerMove(move.before, move.san);
@@ -81,6 +91,7 @@ async function onFeedbackClicked() {
   } else {
     boardApi.value?.undoLastMove();
     feedback.value = idleFeedback;
+    if (openingName && boardApi.value) openingName.value = oldOpeningName.value;
   }
 }
 </script>
