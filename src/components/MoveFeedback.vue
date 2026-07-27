@@ -8,7 +8,11 @@
       </button>
     </div>
 
-    <div class="status" :style="statusStyle" @click="onStatusClicked">
+    <div
+      :class="isButton ? 'status status-button' : 'status'"
+      :style="statusStyle"
+      @click="onStatusClicked"
+    >
       <div class="status-icon">{{ icon }}</div>
       <div class="status-text">
         <h3>{{ title }}</h3>
@@ -73,7 +77,7 @@ const statusStyle = computed(() => {
     case "end":
       return "background-color: var(--end-feedback-color);";
     default:
-      return "";
+      return "background-color: var(--color-surface);";
   }
 });
 
@@ -165,7 +169,9 @@ function onStatusClicked() {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+}
 
+.status-button {
   cursor: pointer;
 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -174,11 +180,11 @@ function onStatusClicked() {
     box-shadow 0.1s ease;
 }
 
-.status:hover {
+.status-button:hover {
   filter: brightness(1.1);
 }
 
-.status:active {
+.status-button:active {
   transform: translateY(2px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

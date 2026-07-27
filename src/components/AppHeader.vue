@@ -15,7 +15,7 @@
 
     <div class="central-component">
       <h1 class="title">Ouvertures</h1>
-      <h3>{{ openingName }}</h3>
+      <span>{{ openingName }}</span>
     </div>
 
     <!-- Placeholder to balance the grid -->
@@ -138,8 +138,8 @@ defineEmits<{
   align-items: center;
 }
 
-.central-component h3 {
-  margin: 0;
+.central-component span {
+  text-align: center;
 }
 
 .title {
