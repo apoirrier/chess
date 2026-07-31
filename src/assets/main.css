@@ -23,6 +23,7 @@
   --bad-feedback-color: #ff4040;
   --end-feedback-color: #3692e7;
 
+  --lichess-button: url("/lichess-light.png");
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +37,8 @@
     --color-border: #374151;
 
     --color-primary: #60a5fa;
+
+    --lichess-button: url("/lichess-dark.png");
   }
 }
 

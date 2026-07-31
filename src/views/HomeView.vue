@@ -7,7 +7,21 @@
       @move="onMove"
     />
 
-    <MoveFeedback :feedback="feedback" @click="onFeedbackClicked" />
+    <div class="feedback-and-button">
+      <MoveFeedback :feedback="feedback" @click="onFeedbackClicked" />
+      <div class="buttons">
+        <a
+          class="lichess"
+          :href="'https://lichess.org/analysis/' + currentFen"
+          about="Copy PGN"
+          target="_blank"
+        ></a>
+        <div class="pgn" @click="onPGNClicked">
+          <span>⬇</span>
+          <p>Copier PGN</p>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -31,6 +45,8 @@ const feedback = ref<Feedback>(idleFeedback);
 
 const openingName = inject<Ref<string>>("openingName");
 const oldOpeningName = ref<string>("");
+
+const currentFen = ref<string>("");
 
 async function playComputerMove(): Promise<void> {
   if (!boardApi.value) return;
@@ -69,6 +85,7 @@ async function onMove(move: MoveEvent) {
     oldOpeningName.value = openingName.value;
     openingName.value = newOpeningName;
   }
+  currentFen.value = boardApi.value.getFen();
 
   if (move.color !== (playerColor.value as PlayerColor)[0]) return;
   try {
@@ -89,10 +106,20 @@ async function onFeedbackClicked() {
   } else if (feedback.value.type === "end") {
     router.go(0);
   } else {
-    boardApi.value?.undoLastMove();
-    feedback.value = idleFeedback;
-    if (openingName && boardApi.value) openingName.value = oldOpeningName.value;
+    if (boardApi.value) {
+      boardApi.value?.undoLastMove();
+      feedback.value = idleFeedback;
+      if (openingName && boardApi.value) openingName.value = oldOpeningName.value;
+      currentFen.value = boardApi.value.getFen();
+    }
   }
+}
+
+async function onPGNClicked() {
+  if (!boardApi.value) return;
+  const pgn = boardApi.value.getPgn();
+  await navigator.clipboard.writeText(pgn);
+  window.open("https://lichess.org/paste", "_blank");
 }
 </script>
 
@@ -110,5 +137,49 @@ async function onFeedbackClicked() {
     align-items: center;
     justify-content: center;
   }
+}
+
+.feedback-and-button {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.pgn {
+  display: flex;
+  flex-direction: row;
+
+  height: 50px;
+  min-width: 100px;
+  border-radius: 10px;
+  background-color: var(--color-surface);
+  text-align: center;
+  padding: 2px;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.pgn span {
+  font-size: 2rem;
+}
+
+.pgn p {
+  width: 75px;
+  margin-top: 0;
+}
+
+.lichess {
+  background-image: var(--lichess-button);
+  background-size: 50px;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
 }
 </style>
