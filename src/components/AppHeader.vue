@@ -18,12 +18,13 @@
       <span>{{ openingName }}</span>
     </div>
 
-    <!-- Placeholder to balance the grid -->
-    <div></div>
+    <div class="logout-button" @click="logout">Déconnexion</div>
   </header>
 </template>
 
 <script setup lang="ts">
+import { logout } from "@/auth/auth";
+
 defineProps<{
   open: boolean;
   openingName: string;
@@ -148,5 +149,27 @@ defineEmits<{
   font-size: 1.25rem;
   font-weight: 600;
   text-align: center;
+}
+
+.logout-button {
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 70px;
+  height: 44px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+  color: var(--color-text);
+
+  font-size: 1rem;
+  cursor: pointer;
+
+  user-select: none;
 }
 </style>
