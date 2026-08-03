@@ -16,7 +16,6 @@ export async function request<T>(path: string, body: unknown): Promise<T> {
   if (!user || user.expired) {
     throw new Error("User is not authenticated");
   }
-  console.log(user);
 
   const url = `${API_BASE_URL}${path}`;
   const accessToken = user.access_token;
