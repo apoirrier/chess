@@ -10,7 +10,7 @@ export const userManager = new UserManager({
   post_logout_redirect_uri: window.location.origin,
 
   response_type: "code",
-  scope: "openid",
+  scope: "openid profile email",
 
   automaticSilentRenew: true,
   loadUserInfo: true,
