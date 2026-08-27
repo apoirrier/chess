@@ -13,6 +13,7 @@ import {
   EVALUATE_PATH,
   IMPORT_PGN_PATH,
   OPENING_NAME_PATH,
+  END_VARIATION_PATH,
 } from "@/services/Api";
 
 export function createGame(): PlayerColor {
@@ -56,4 +57,16 @@ export async function importPGN(pgn: string): Promise<ImportFeedback> {
 export async function getOpeningName(fen: string): Promise<string> {
   const openingName = await request<OpeningNameResponse>(OPENING_NAME_PATH, { fen: fen });
   return openingName.name;
+}
+
+export async function endVariation(
+  pgn: string,
+  errorMade: boolean,
+  playerColor: PlayerColor,
+): Promise<void> {
+  await request<void>(END_VARIATION_PATH, {
+    pgn: pgn,
+    errorMade: errorMade,
+    playerColor: playerColor,
+  });
 }

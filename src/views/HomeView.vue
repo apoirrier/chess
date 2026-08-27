@@ -30,7 +30,13 @@ import { inject, type Ref, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import ChessBoard from "@/components/ChessBoard.vue";
 import MoveFeedback from "@/components/MoveFeedback.vue";
-import { createGame, playComputer, evaluatePlayerMove, getOpeningName } from "@/services/Game";
+import {
+  createGame,
+  playComputer,
+  evaluatePlayerMove,
+  getOpeningName,
+  endVariation,
+} from "@/services/Game";
 import { type Feedback, idleFeedback, endFeedback } from "@/models/Feedback";
 import type { PlayerColor } from "@/models/Game";
 import type { BoardApi, MoveEvent } from "vue3-chessboard";
@@ -48,12 +54,19 @@ const oldOpeningName = ref<string>("");
 
 const currentFen = ref<string>("");
 
+const errorMade = ref<boolean>(false);
+
 async function playComputerMove(): Promise<void> {
   if (!boardApi.value) return;
   const fen = boardApi.value.getFen();
   try {
     const [move, message] = await playComputer(fen);
     if (move === "") {
+      await endVariation(
+        boardApi.value.getPgn(),
+        errorMade.value,
+        playerColor.value as PlayerColor,
+      );
       feedback.value = endFeedback;
     } else {
       boardApi.value.move(move);
@@ -69,6 +82,7 @@ async function playComputerMove(): Promise<void> {
 
 async function onBoardCreated(api: BoardApi) {
   boardApi.value = api;
+  errorMade.value = false;
   if (playerColor.value === "black") {
     playComputerMove();
   }
@@ -94,6 +108,8 @@ async function onMove(move: MoveEvent) {
       setTimeout(async () => {
         playComputerMove();
       }, 500);
+    } else if (feedback.value.type === "error") {
+      errorMade.value = true;
     }
   } catch (err) {
     console.error(err);

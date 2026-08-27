@@ -3,6 +3,7 @@ import { userManager } from "@/auth/userManager";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export const PLAY_COMPUTER_PATH = "/computer/play";
+export const END_VARIATION_PATH = "/computer/end-variation";
 export const EVALUATE_PATH = "/feedback/evaluate";
 export const IMPORT_PGN_PATH = "/pgn";
 export const OPENING_NAME_PATH = "/opening-name";
