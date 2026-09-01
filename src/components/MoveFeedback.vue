@@ -1,11 +1,12 @@
 <template>
   <div class="feedback">
-    <div v-if="feedback.message.length > 0" class="bubble">
-      <span>{{ feedback.message }}</span>
+    <div v-if="feedback.message.length > 0 || feedback.solution" class="bubble">
+      <span v-if="feedback.message.length > 0">{{ feedback.message }}</span>
 
-      <button v-if="feedback.action" @click="feedback.action.callback">
-        {{ feedback.action.label }}
-      </button>
+      <div>
+        <button v-if="feedback.solution" @click="onHintClicked">Indice</button>
+        <button v-if="feedback.solution" @click="onSolutionClicked">Solution</button>
+      </div>
     </div>
 
     <div
@@ -34,6 +35,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "click"): void;
+  (e: "hint", solution: string): void;
+  (e: "solution", solution: string): void;
 }>();
 
 const icon = computed(() => {
@@ -101,6 +104,14 @@ function onStatusClicked() {
     emit("click");
   }
 }
+
+function onHintClicked() {
+  if (props.feedback.solution !== undefined) emit("hint", props.feedback.solution);
+}
+
+function onSolutionClicked() {
+  if (props.feedback.solution !== undefined) emit("solution", props.feedback.solution);
+}
 </script>
 
 <style scoped>
@@ -114,6 +125,10 @@ function onStatusClicked() {
 }
 
 .bubble {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
   max-width: 360px;
 
   grid-area: bubble;
@@ -127,6 +142,16 @@ function onStatusClicked() {
 
   background: var(--color-surface);
   border: 1px solid var(--color-border);
+}
+
+.bubble button {
+  border: none;
+  border-radius: 8px;
+
+  background-color: var(--color-secondary);
+  color: var(--color-on-secondary);
+
+  cursor: pointer;
 }
 
 /* Bubble tail */

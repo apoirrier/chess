@@ -8,7 +8,12 @@
     />
 
     <div class="feedback-and-button">
-      <MoveFeedback :feedback="feedback" @click="onFeedbackClicked" />
+      <MoveFeedback
+        :feedback="feedback"
+        @click="onFeedbackClicked"
+        @hint="onHintClicked"
+        @solution="onSolutionClicked"
+      />
       <div class="buttons">
         <a
           class="lichess"
@@ -129,6 +134,30 @@ async function onFeedbackClicked() {
       currentFen.value = boardApi.value.getFen();
     }
   }
+}
+
+async function onHintClicked(solution: string) {
+  console.log("Hint clicked: " + solution);
+  if (boardApi.value && solution.length >= 2)
+    boardApi.value.setShapes([
+      {
+        orig: solution[0] + solution[1],
+        dest: solution[0] + solution[1],
+        brush: "green",
+      },
+    ]);
+}
+
+async function onSolutionClicked(solution: string) {
+  console.log("Solution clicked: " + solution);
+  if (boardApi.value && solution.length >= 4)
+    boardApi.value.setShapes([
+      {
+        orig: solution[0] + solution[1],
+        dest: solution[2] + solution[3],
+        brush: "green",
+      },
+    ]);
 }
 
 async function onPGNClicked() {
