@@ -44,7 +44,7 @@ import {
 } from "@/services/Game";
 import { type Feedback, idleFeedback, endFeedback } from "@/models/Feedback";
 import type { PlayerColor } from "@/models/Game";
-import type { BoardApi, MoveEvent } from "vue3-chessboard";
+import type { BoardApi, SquareKey, MoveEvent } from "vue3-chessboard";
 
 const router = useRouter();
 
@@ -137,24 +137,23 @@ async function onFeedbackClicked() {
 }
 
 async function onHintClicked(solution: string) {
-  console.log("Hint clicked: " + solution);
-  if (boardApi.value && solution.length >= 2)
+  if (boardApi.value && solution.length >= 2) {
     boardApi.value.setShapes([
       {
-        orig: solution[0] + solution[1],
-        dest: solution[0] + solution[1],
+        orig: solution.slice(0, 2) as SquareKey,
+        dest: solution.slice(0, 2) as SquareKey,
         brush: "green",
       },
     ]);
+  }
 }
 
 async function onSolutionClicked(solution: string) {
-  console.log("Solution clicked: " + solution);
   if (boardApi.value && solution.length >= 4)
     boardApi.value.setShapes([
       {
-        orig: solution[0] + solution[1],
-        dest: solution[2] + solution[3],
+        orig: solution.slice(0, 2) as SquareKey,
+        dest: solution.slice(2, 4) as SquareKey,
         brush: "green",
       },
     ]);
