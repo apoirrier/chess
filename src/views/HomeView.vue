@@ -25,6 +25,9 @@
           <span>⬇</span>
           <p>Copier PGN</p>
         </div>
+        <div v-if="date" class="date" :style="{ color: dateColor }">
+          {{ date }}
+        </div>
       </div>
     </div>
   </main>
@@ -61,11 +64,14 @@ const currentFen = ref<string>("");
 
 const errorMade = ref<boolean>(false);
 
+const date = ref<string>("");
+const dateColor = ref<string>("var(--color-on-surface)");
+
 async function playComputerMove(): Promise<void> {
   if (!boardApi.value) return;
   const fen = boardApi.value.getFen();
   try {
-    const [move, message] = await playComputer(fen);
+    const [move, message, dueDate, bucket] = await playComputer(fen);
     if (move === "") {
       await endVariation(
         boardApi.value.getPgn(),
@@ -79,6 +85,18 @@ async function playComputerMove(): Promise<void> {
         type: "idle",
         message: message === "" ? "Choisissez un coup candidat." : message,
       };
+      if (dueDate) {
+        date.value = dueDate;
+        if (bucket === 1) {
+          dateColor.value = "var(--bad-feedback-color)";
+        } else if (bucket === 0) {
+          dateColor.value = "var(--end-feedback-color)";
+        } else {
+          dateColor.value = "var(--color-on-surface)";
+        }
+      } else {
+        date.value = "";
+      }
     }
   } catch (err) {
     console.error(err);
@@ -225,5 +243,19 @@ async function onPGNClicked() {
   width: 50px;
   height: 50px;
   border-radius: 10px;
+}
+
+.date {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  height: 50px;
+  min-width: 60px;
+  border-radius: 10px;
+  background-color: var(--color-surface);
+  text-align: center;
+  padding: 2px;
 }
 </style>
