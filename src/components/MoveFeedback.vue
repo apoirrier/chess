@@ -1,11 +1,18 @@
 <template>
   <div class="feedback">
-    <div v-if="feedback.message.length > 0 || feedback.solution" class="bubble">
+    <div
+      v-if="feedback.message.length > 0 || (feedback.type === 'idle' && feedback.solution)"
+      class="bubble"
+    >
       <span v-if="feedback.message.length > 0">{{ feedback.message }}</span>
 
       <div>
-        <button v-if="feedback.solution" @click="onHintClicked">Indice</button>
-        <button v-if="feedback.solution" @click="onSolutionClicked">Solution</button>
+        <button v-if="feedback.type === 'idle' && feedback.solution" @click="onHintClicked">
+          Indice
+        </button>
+        <button v-if="feedback.type === 'idle' && feedback.solution" @click="onSolutionClicked">
+          Solution
+        </button>
       </div>
     </div>
 

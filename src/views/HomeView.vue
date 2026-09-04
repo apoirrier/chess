@@ -154,7 +154,9 @@ async function onFeedbackClicked() {
   } else {
     if (boardApi.value) {
       boardApi.value?.undoLastMove();
+      const oldFeedback = feedback.value;
       feedback.value = idleFeedback;
+      if (oldFeedback.type === "error") feedback.value.solution = oldFeedback.solution;
       if (openingName && boardApi.value) openingName.value = oldOpeningName.value;
       currentFen.value = boardApi.value.getFen();
     }
