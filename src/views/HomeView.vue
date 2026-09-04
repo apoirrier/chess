@@ -71,7 +71,7 @@ async function playComputerMove(): Promise<void> {
   if (!boardApi.value) return;
   const fen = boardApi.value.getFen();
   try {
-    const [move, message, dueDate, bucket] = await playComputer(fen);
+    const [move, message, dueDate] = await playComputer(fen);
     if (move === "") {
       await endVariation(
         boardApi.value.getPgn(),
@@ -86,11 +86,18 @@ async function playComputerMove(): Promise<void> {
         message: message === "" ? "Choisissez un coup candidat." : message,
       };
       if (dueDate) {
-        date.value = dueDate;
-        if (bucket === 1) {
+        const dateObj = new Date(dueDate);
+        const today = new Date();
+        date.value = dateObj.toLocaleDateString("fr-FR", {
+          day: "2-digit",
+          month: "2-digit",
+        });
+        today.setHours(0, 0, 0, 0);
+        dateObj.setHours(0, 0, 0, 0);
+        if (dateObj < today) {
           dateColor.value = "var(--bad-feedback-color)";
-        } else if (bucket === 0) {
-          dateColor.value = "var(--end-feedback-color)";
+        } else if (dateObj > today) {
+          dateColor.value = "var(--good-feedback-color)";
         } else {
           dateColor.value = "var(--color-on-surface)";
         }

@@ -4,7 +4,6 @@ export interface PlayComputerResponse {
   move: string;
   message: string;
   date: string | null;
-  bucket: number | null;
 }
 
 export interface EvaluateMoveResponse {

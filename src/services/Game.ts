@@ -22,11 +22,9 @@ export function createGame(): PlayerColor {
   return playerColor;
 }
 
-export async function playComputer(
-  fen: string,
-): Promise<[string, string, string | null, number | null]> {
+export async function playComputer(fen: string): Promise<[string, string, string | null]> {
   const response = await request<PlayComputerResponse>(PLAY_COMPUTER_PATH, { fen: fen });
-  return [response.move, response.message, response.date, response.bucket];
+  return [response.move, response.message, response.date];
 }
 
 export async function evaluatePlayerMove(before: string, move: string): Promise<Feedback> {
