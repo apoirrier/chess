@@ -1,4 +1,5 @@
 import type { Feedback } from "./Feedback";
+import type { PlayerColor } from "./Game";
 
 export interface PlayComputerResponse {
   move: string;
@@ -16,4 +17,8 @@ export interface ImportPGNResponse {
 
 export interface OpeningNameResponse {
   name: string;
+}
+
+export interface PlayerColorResponse {
+  playerColor: PlayerColor;
 }

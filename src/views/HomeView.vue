@@ -118,8 +118,8 @@ async function onBoardCreated(api: BoardApi) {
   }
 }
 
-onMounted(() => {
-  playerColor.value = createGame();
+onMounted(async () => {
+  playerColor.value = await createGame();
 });
 
 async function onMove(move: MoveEvent) {

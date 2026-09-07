@@ -5,6 +5,7 @@ import type {
   EvaluateMoveResponse,
   ImportPGNResponse,
   OpeningNameResponse,
+  PlayerColorResponse,
 } from "@/models/responses";
 import { successFeedback, type ImportFeedback } from "@/models/ImportFeedback";
 import {
@@ -14,12 +15,12 @@ import {
   IMPORT_PGN_PATH,
   OPENING_NAME_PATH,
   END_VARIATION_PATH,
+  PLAYER_COLOR_PATH,
 } from "@/services/Api";
 
-export function createGame(): PlayerColor {
-  const playerColor: PlayerColor = Math.random() > 0.5 ? "white" : "black";
-
-  return playerColor;
+export async function createGame(): Promise<PlayerColor> {
+  const response = await request<PlayerColorResponse>(PLAYER_COLOR_PATH, null);
+  return response.playerColor;
 }
 
 export async function playComputer(fen: string): Promise<[string, string, string | null]> {
